@@ -3,6 +3,24 @@
 clear
 echo "Script per l'organizzazzione dei file musicali"
 echo
+echo "Dove sono posizionati i file binari di ffmpeg?"
+echo "La directory standard di ffmpeg è ~/bin"
+DIR_FFMPEG="~/bin"
+echo "Cambiarla?"
+read yn
+if [ "$yn" == "y" ]; then
+    yn=lucanabbo;
+    while [ "$yn" != "y" ]; do
+	echo "Inserire la directory che si vuole utilizzare"
+	read DIR_FFMPEG
+	if [ "$DIR_FFMPEG" == "yolo" ]; then
+	    DIR_FFMPEG="~/Programmi/Compilati/ffmpeg/bin"
+	fi
+	echo "Va bene?"
+	read yn
+    done
+fi
+echo
 while [ "$yn" != "y" ]; do
         echo "Inserire la directory in cui sono locati i file musicali"
         read -e DIR_INPUT
@@ -18,7 +36,7 @@ echo "Modificarla? (y = si, * = no)"
 read yn
 
 if [ "$yn" == "y" ]; then
-       while [ "$yn" != "y" ]; do
+    while [ "$yn" != "y" ]; do
                 echo "Inserire la directory da utilizzare"
                 read -e DIR_OUTPUT
                 echo "Hai scelto la cartella: $DIR_OUTPUT"
@@ -40,20 +58,20 @@ echo
 echo "Tutto ok?"
 read yn
 if [ "$yn" == "yes" ] || [ "$yn" == "Y" ] || [ "$yn" == "y" ]; then
-artista=$(grep -m 1 Artist metadata.txt)
-prefisso="Artist                          : "
-artista=$(echo "$artista" | sed "s/^$prefisso//")
-album=$(grep -m 1 Album metadata.txt)
-prefisso="Album                           : "
-album=$(echo "$album" | sed "s/^$prefisso//")
+ARTISTA=$(grep -m 1 Artist metadata.txt)
+PREFISSO="Artist                          : "
+ARTISTA=$(echo "$ARTISTA" | sed "s/^$PREFISSO//")
+ALBUM=$(grep -m 1 Album metadata.txt)
+PREFISSO="Album                           : "
+ALBUM=$(echo "$ALBUM" | sed "s/^$PREFISSO//")
 else
-	echo "Qual'e' l'artista?"
-	read artista
+	echo "Qual'e' l'Artista?"
+	read ARTISTA
 	echo "Qual'e' l'album?"
-	read album
+	read ALBUM
 fi
-DIR_OUTPUT=$(echo "$DIR_OUTPUT"/"$artista")
-DIR_OUTPUT=$(echo "$DIR_OUTPUT"/"$album")
+DIR_OUTPUT=$(echo "$DIR_OUTPUT"/"$ARTISTA")
+DIR_OUTPUT=$(echo "$DIR_OUTPUT"/"$ALBUM")
 echo "$DIR_OUTPUT"
 
 
@@ -67,13 +85,13 @@ echo "	(b) libvorbis	(f) libfaac	(l) mp2		"
 echo "	(c) libfdk_aac	(g) eac3/ac3	(m) wmav2/wmav1	"
 echo "	(d) aac		(h) libtwolame			"
 echo
-read encoder
-case $encoder in #la variabile encoder viene riutilizzata per contenere la stringa
-	a) 	encoder='libopus';
-		extension='opus';;
-	b) 	encoder='libvorbis';
-		extension='ogg';;
-	c) 	encoder='libfdk_aac'; #libfdk contiene diversi profili
+read ENCODER
+case $ENCODER in #la variabile encoder viene riutilizzata per contenere la stringa
+	a) 	ENCODER='libopus';
+		EXTENSION='opus';;
+	b) 	ENCODER='libvorbis';
+		EXTENSION='ogg';;
+	c) 	ENCODER='libfdk_aac'; #libfdk contiene diversi profili
 		echo "Che profilo utilizzare?"
 		echo
 		echo "	(*) Standard	(1) aac_he	(2) aac_he_v2	"
@@ -83,23 +101,23 @@ case $encoder in #la variabile encoder viene riutilizzata per contenere la strin
 			2) profilo="-profile:a aac_he_v2";;
 			*) profilo="";;
 		esac;
-		extension='m4a';;
-	d) 	encoder='aac';
-		extension='m4a';;
-	e) 	encoder='libmp3lame';
-		extension='mp3';;
-	f) 	encoder='libfaac';
-		extension='m4a';;
-	g) 	encoder='eac3/ac3';
-		extension='ac3';;
-	h) 	encoder='libtwolame';
-		extension='mp2';;
-	i)	encoder='vorbis';
-		extension='ogg';;
-	l) 	encoder='mp2';
-		extension='mp2';;
-	m) 	encoder='wmav2/wmav1';
-		extension='wmv';;
+		EXTENSION='m4a';;
+	d) 	ENCODER='aac';
+		EXTENSION='m4a';;
+	e) 	ENCODER='libmp3lame';
+		EXTENSION='mp3';;
+	f) 	ENCODER='libfaac';
+		EXTENSION='m4a';;
+	g) 	ENCODER='eac3/ac3';
+		EXTENSION='ac3';;
+	h) 	ENCODER='libtwolame';
+		EXTENSION='mp2';;
+	i)	ENCODER='vorbis';
+		EXTENSION='ogg';;
+	l) 	ENCODER='mp2';
+		EXTENSION='mp2';;
+	m) 	ENCODER='wmav2/wmav1';
+		EXTENSION='wmv';;
 esac
 echo
 echo
@@ -119,6 +137,6 @@ echo "DIR_OUTPUT" $DIR_OUTPUT >> log_ffpmeg-script.txt #crea un log della cartel
 for i in "$DIR_INPUT"*.flac; do
 	if [ -e "$i" ]; then
    		file=`basename "$i" .flac`
-  		ffmpeg -i  "$i" -c:a "$encoder" -b:a "$bitrate"k  "$DIR_OUTPUT"/"$file"."$extension"
+  		"$DIR_FFMPEG" -i  "$i" -c:a "$ENCODER" -b:a "$bitrate"k  "$DIR_OUTPUT"/"$file"."$EXTENSION"
 	fi
 done
