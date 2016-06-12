@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "Super Script Musica"
+
+#Load del file config
+CONFIG=$(cat config.txt | sed "s/ //")
+FFMPEG=$(echo $CONFIG | grep FFMPEG | sed "s/FFMPEG=//")
+echo
+echo
+echo
+echo $FFMPEG
+

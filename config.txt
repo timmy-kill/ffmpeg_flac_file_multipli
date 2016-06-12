@@ -1,0 +1,7 @@
+File di configurazione per lo script, modificare i valori o eseguire lo script 'config.sh'
+FFMPEG =  ~/bin
+OUTPUT =  ~/Musica
+ENCODER =  libopus
+EXTENSION =  opus
+PROFILE =
+BITRATE =  64

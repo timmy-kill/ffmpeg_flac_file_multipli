@@ -9,7 +9,7 @@ DIR_FFMPEG="~/bin"
 echo "Cambiarla? (y = si, * = no)"
 read yn
 if [ "$yn" == "y" ]; then
-    yn='reset';
+    yn='';
     while [ "$yn" != "y" ]; do
 	echo "Inserire la directory che si vuole utilizzare"
 	read -e DIR_FFMPEG
@@ -32,7 +32,7 @@ echo "Modificarla? (y = si, * = no)"
 read yn
 
 if [ "$yn" == "y" ]; then
-    yn='reset';
+    yn='';
     while [ "$yn" != "y" ]; do
         echo "Inserire la directory da utilizzare"
         read -e DIR_OUTPUT
@@ -54,6 +54,7 @@ echo "	(b) libvorbis	(f) libfaac	(l) mp2		"
 echo "	(c) libfdk_aac	(g) eac3/ac3	(m) wmav2/wmav1	"
 echo "	(d) aac		(h) libtwolame			"
 echo
+PROFILE=''
 read ENCODER
 case $ENCODER in #la variabile encoder viene riutilizzata per contenere la stringa
 	a) 	ENCODER='libopus';
@@ -64,11 +65,11 @@ case $ENCODER in #la variabile encoder viene riutilizzata per contenere la strin
 		echo "Che profilo utilizzare?"
 		echo
 		echo "	(*) Standard	(1) aac_he	(2) aac_he_v2	"
-		read PROFILO
-		case $PROFILO in
-			1) PROFILO="-profile:a aac_he";;
-			2) PROFILO="-profile:a aac_he_v2";;
-			*) PROFILO="";;
+		read PROFILE
+		case $PROFILE in
+			1) PROFILE="-profile:a aac_he";;
+			2) PROFILE="-profile:a aac_he_v2";;
+			*) PROFILE="";;
 		esac;
 		EXTENSION='m4a';;
 	d) 	ENCODER='aac';
@@ -104,4 +105,5 @@ echo "FFMPEG = " $DIR_FFMPEG >> config.txt
 echo "OUTPUT = " $DIR_OUTPUT >> config.txt
 echo "ENCODER = " $ENCODER >> config.txt
 echo "EXTENSION = " $EXTENSION >> config.txt
+echo "PROFILE" = $PROFILE >> config.txt
 echo "BITRATE = " $BITRATE >> config.txt
