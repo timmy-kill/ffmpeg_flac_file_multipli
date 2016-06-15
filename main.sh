@@ -14,11 +14,12 @@ if [ "$YN" == "y" ]; then
 fi
 
 #Load config file
-FFMPEG=$(cat config.txt| grep FFMPEG | sed "s/FFMPEG = //")
-OUTPUT=$(cat config.txt| grep OUTPUT | sed "s/OUTPUT = //")
-ENCODER=$(cat config.txt| grep ENCODER | sed "s/ENCODER = //")
-EXTENSION=$(cat config.txt| grep EXTENSION | sed "s/EXTENSION = //")
-BITRATE=$(cat config.txt| grep BITRATE | sed "s/BITRATE = //")
+CONFIG_FILE=$(cat config.txt | tr -d [:blank:])
+FFMPEG=$(echo "$CONFIG_FILE"| grep FFMPEG | sed "s/FFMPEG=//")
+DIR_OUTPUT=$(echo "$CONFIG_FILE"| grep OUTPUT | sed "s/OUTPUT=//")
+ENCODER=$(echo "$CONFIG_FILE"| grep ENCODER | sed "s/ENCODER=//")
+EXTENSION=$(echo "$CONFIG_FILE"| grep EXTENSION | sed "s/EXTENSION=//")
+BITRATE=$(echo "$CONFIG_FILE"| grep BITRATE | sed "s/BITRATE=//")
 
 #Input files
 while [ "$YN" != "y" ]; do
@@ -61,7 +62,8 @@ fi
 #Folder Creation
 DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$ARTISTA""/""$ALBUM")
 DIR_OUTPUT_FLAC=$(echo "$DIR_OUTPUT"/FLAC)
-DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$EXTENSION""/""$BITRATE"" - KBs") #Da utilizzare sed per sostituire le minuscole con le maiuscole
+EXTENSION=$(echo $EXTENSION | tr '[:lower:]' '[:upper:]')
+DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$EXTENSION"" ""$BITRATE"" - KBs") #Da utilizzare sed per sostituire le minuscole con le maiuscole
 echo "$DIR_OUTPUT"
 
 mkdir -p "$DIR_OUTPUT"/ #crea, nel caso la cartella non sia gia' esistente, la directory di destinazione
@@ -71,8 +73,9 @@ echo "DIR_OUTPUT" $DIR_OUTPUT >> log_ffpmeg-script.txt #crea un log della cartel
 #Converter
 for i in "$DIR_INPUT"*.flac; do
     if [ -e "$i" ]; then
-  	"$DIR_FFMPEG" -i  "$i" -c:a "$ENCODER" -b:a "$bitrate"k  "$DIR_OUTPUT"/"$file"."$EXTENSION"
-	cp "$i" $DIR_OUTPUT_LOSSLESS
+	file=$(basename -s .flac "$i")
+  	"$DIR_FFMPEG"ffmpeg -i  "$i" -c:a "$ENCODER" -b:a "$BITRATE"k  "$DIR_OUTPUT"/"$file"."$EXTENSION"
+	cp "$i" $DIR_OUTPUT_FLAC
     fi
 done
 

@@ -4,13 +4,19 @@
 
 rm -f config.txt
 
+
+#Cartella contenente il binario di ffmpeg
 echo "La directory standard di ffmpeg è ~/bin"
-DIR_FFMPEG="~/bin"
+echo "Se già esiste l'alias ffmpeg, saltare questo passaggio"
+echo "Esiste l'alias?"
+read YN
+if [ "$YN" == "n" ]; then
+DIR_FFMPEG="$HOME""/bin"
 echo "Cambiarla? (y = si, * = no)"
-read yn
-if [ "$yn" == "y" ]; then
-    yn='';
-    while [ "$yn" != "y" ]; do
+read YN
+if [ "$YN" == "y" ]; then
+    YN='';
+    while [ "$YN" != "y" ]; do
 	echo "Inserire la directory che si vuole utilizzare"
 	read -e DIR_FFMPEG
 	
@@ -21,19 +27,21 @@ if [ "$yn" == "y" ]; then
 	echo "Hai scelto la cartella: $DIR_FFMPEG"
 	ls "$DIR_FFMPEG"
 	echo "Va bene? (y = si, * = no)"
-	read yn
+	read YN
+
     done
 fi
+    DIR_FFMPEG="$DIR_FFMPEG"/
+fi
 
-
-DIR_OUTPUT='~/Musica'
-echo "La cartella standard per la musica e' $DIR_OUTPUT"
+DIR_OUTPUT=""$HOME"/Musica"
+echo "La cartella standard per la musica e' ~/Musica"
 echo "Modificarla? (y = si, * = no)"
-read yn
+read YN
 
-if [ "$yn" == "y" ]; then
-    yn='';
-    while [ "$yn" != "y" ]; do
+if [ "$YN" == "y" ]; then
+    YN='';
+    while [ "$YN" != "y" ]; do
         echo "Inserire la directory da utilizzare"
         read -e DIR_OUTPUT
 	if [ "$DIR_OUTPUT" == "yolo" ]; then
@@ -42,7 +50,7 @@ if [ "$yn" == "y" ]; then
         echo "Hai scelto la cartella: $DIR_OUTPUT"
 	ls "$DIR_OUTPUT"
 	echo "Va bene? (y = si, * = no)"
-        read yn
+        read YN
     done
     echo "DIR_OUTPUT" $DIR_OUTPUT >> log.txt
 fi
@@ -101,9 +109,9 @@ read BITRATE
 
 
 echo "File di configurazione per lo script, modificare i valori o eseguire lo script 'config.sh'" >> config.txt
-echo "FFMPEG = " $DIR_FFMPEG >> config.txt
-echo "OUTPUT = " $DIR_OUTPUT >> config.txt
-echo "ENCODER = " $ENCODER >> config.txt
-echo "EXTENSION = " $EXTENSION >> config.txt
-echo "PROFILE" = $PROFILE >> config.txt
-echo "BITRATE = " $BITRATE >> config.txt
+echo "FFMPEG =" $DIR_FFMPEG >> config.txt
+echo "OUTPUT =" $DIR_OUTPUT >> config.txt
+echo "ENCODER =" $ENCODER >> config.txt
+echo "EXTENSION =" $EXTENSION >> config.txt
+echo "PROFILE =" $PROFILE >> config.txt
+echo "BITRATE =" $BITRATE >> config.txt
