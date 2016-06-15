@@ -1,7 +1,0 @@
-File di configurazione per lo script, modificare i valori o eseguire lo script 'config.sh'
-FFMPEG =
-OUTPUT = /home/timmykill/Musica
-ENCODER = libopus
-EXTENSION = opus
-PROFILE =
-BITRATE = 64
