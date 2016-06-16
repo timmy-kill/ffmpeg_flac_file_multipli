@@ -38,7 +38,7 @@ if [ -e "$DIR_INPUT"*.cue ]; then
     read YN
     if [ "$YN" == "y" ]; then
 	YN=''
-	./splitter_cue.sh "$DIR_INPUT"
+       	./splitter_cue.sh "$DIR_INPUT"
 	CUE=1
 	DIR_INPUT_ORIGINAL="$DIR_INPUT"
 	DIR_INPUT="$DIR_INPUT"/split/
@@ -46,6 +46,7 @@ if [ -e "$DIR_INPUT"*.cue ]; then
 fi
 
 #Load Metadata
+rm metadata.txt
 exiftool "$DIR_INPUT"*.flac >> metadata.txt
 ARTISTA=$(grep -m 1 Artist metadata.txt)
 PREFISSO="Artist                          : "
