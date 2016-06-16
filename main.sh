@@ -75,7 +75,7 @@ for i in "$DIR_INPUT"*.flac; do
     if [ -e "$i" ]; then
 	file=$(basename -s .flac "$i")
   	"$DIR_FFMPEG"ffmpeg -i  "$i" -c:a "$ENCODER" -b:a "$BITRATE"k  "$DIR_OUTPUT"/"$file"."$EXTENSION"
-	cp "$i" $DIR_OUTPUT_FLAC
+	cp "$i" "$DIR_OUTPUT_FLAC"
     fi
 done
 
