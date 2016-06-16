@@ -32,15 +32,18 @@ while [ "$YN" != "y" ]; do
 done
 
 #Splitting CUE
-echo "E' necessario lo split del file .flac?"
-read YN
-if [ "$YN" == "y" ]; then
-    YN=''
-    ./splitter_cue.sh $DIR_INPUT
+if [ -e "$DIR_INPUT"*.cue ]; then
+    echo "E' stato rilevato un file .cue"
+    echo "E' necessario lo split del file .flac?"
+    read YN
+    if [ "$YN" == "y" ]; then
+	YN=''
+	./splitter_cue.sh "$DIR_INPUT"
+    fi
 fi
 
 #Load Metadata
-exiftool *.flac >> metadata.txt
+exiftool "$DIR_INPUT"*.flac >> metadata.txt
 ARTISTA=$(grep -m 1 Artist metadata.txt)
 PREFISSO="Artist                          : "
 ARTISTA=$(echo "$ARTISTA" | sed "s/^$PREFISSO//")
@@ -56,8 +59,10 @@ if [ $YN == "n" ]; then #Da creare script apposta
     read ARTISTA
     echo "Qual'e' l'album?"
     read ALBUM
-    #Da aggiungere il tag dei files
 fi
+
+id3 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3 Tagging
+id3 -2 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3v2 Tagging
 
 #Folder Creation
 DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$ARTISTA""/""$ALBUM")
@@ -69,7 +74,7 @@ echo "$DIR_OUTPUT"
 mkdir -p "$DIR_OUTPUT"/ #crea, nel caso la cartella non sia gia' esistente, la directory di destinazione
 mkdir -p "$DIR_OUTPUT_FLAC"
 echo "DIR_OUTPUT" $DIR_OUTPUT >> log_ffpmeg-script.txt #crea un log della cartella appena creata, in caso bisogni eliminarla
-
+n
 #Converter
 for i in "$DIR_INPUT"*.flac; do
     if [ -e "$i" ]; then
