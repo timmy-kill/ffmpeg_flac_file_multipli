@@ -39,6 +39,9 @@ if [ -e "$DIR_INPUT"*.cue ]; then
     if [ "$YN" == "y" ]; then
 	YN=''
 	./splitter_cue.sh "$DIR_INPUT"
+	CUE=1
+	DIR_INPUT_ORIGINAL="$DIR_INPUT"
+	DIR_INPUT="$DIR_INPUT"/split/
     fi
 fi
 
@@ -66,6 +69,11 @@ id3 -2 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3v2 Tagging
 
 #Folder Creation
 DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$ARTISTA""/""$ALBUM")
+if [ $CUE == 1 ]; then
+    mkdir -p "$DIR_OUTPUT"/FLAC\ -\ CUE
+    cp "$DIR_INPUT_ORIGINAL"/*.flac "$DIR_OUTPUT"/FLAC\ -\ CUE
+    cp "$DIR_INPUT_ORIGINAL"/*.cue "$DIR_OUTPUT"/FLAC\ -\ CUE
+fi
 DIR_OUTPUT_FLAC=$(echo "$DIR_OUTPUT"/FLAC)
 EXTENSION=$(echo $EXTENSION | tr '[:lower:]' '[:upper:]')
 DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$EXTENSION"" ""$BITRATE"" - KBs") #Da utilizzare sed per sostituire le minuscole con le maiuscole

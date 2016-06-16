@@ -35,7 +35,7 @@ case $TYPE in
         mkdir split
         shnsplit -d split -f *.cue -o "flac flac -V --best -o %f -" *.ape -t "%n - %t"
         rm -f split/00*pregap*
-        cuetag *.cue split/*.flac
+        cuetag.sh *.cue split/*.flac
         exit
         ;;
 
@@ -43,19 +43,19 @@ case $TYPE in
         mkdir split
         shnsplit -d split -f *.cue -o "flac flac -V --best -o %f -" *.flac -t "%n - %t"
         rm -f split/00*pregap*
-        cuetag *.cue split/*.flac
+        cuetag.sh *.cue split/*.flac
         exit
         ;;
 
     *.mp3*)
         mp3splt -no "@n @p - @t (split)" -c *.cue *.mp3
-        cuetag *.cue *split\).mp3
+        cuetag.sh *.cue *split\).mp3
         exit
         ;;
 
     *.ogg*)
         mp3splt -no "@n @p - @t (split)" -c *.cue *.ogg
-        cuetag *.cue *split\).ogg
+        cuetag.sh *.cue *split\).ogg
         exit
         ;;
 
@@ -63,7 +63,7 @@ case $TYPE in
         mkdir split
         shnsplit -d split -f *.cue -o "flac flac -V --best -o %f -" *.tta -t "%n - %t"
         rm -f split/00*pregap*
-        cuetag *.cue split/*.flac
+        cuetag.sh *.cue split/*.flac
         exit
         ;;
 
@@ -71,7 +71,7 @@ case $TYPE in
         mkdir split
         shnsplit -d split -f *.cue -o "flac flac -V --best -o %f -" *.wv -t "%n - %t"
         rm -f split/00*pregap*
-        cuetag *.cue split/*.flac
+        cuetag.sh *.cue split/*.flac
         exit
         ;;
 
@@ -79,7 +79,7 @@ case $TYPE in
         mkdir split
         shnsplit -d split -f *.cue -o "flac flac -V --best -o %f -" *.wav -t "%n - %t"
         rm -f split/00*pregap*
-        cuetag *.cue split/*.flac
+        cuetag.sh *.cue split/*.flac
         exit
         ;;
 
