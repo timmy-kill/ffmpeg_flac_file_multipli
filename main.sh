@@ -27,11 +27,13 @@ while [ "$YN" != "y" ]; do
     read -e DIR_INPUT
     echo "Hai scelto la cartella: $DIR_INPUT"
     ls "$DIR_INPUT"
+    DIR_INPUT="$DIR_INPUT""/"
     echo "Va bene? (y = si, * = no)"
     read YN
 done
 
 #Splitting CUE
+CUE=0
 if [ -e "$DIR_INPUT"*.cue ]; then
     echo "E' stato rilevato un file .cue"
     echo "E' necessario lo split del file .flac?"
@@ -77,13 +79,14 @@ if [ $CUE == 1 ]; then
 fi
 DIR_OUTPUT_FLAC=$(echo "$DIR_OUTPUT"/FLAC)
 EXTENSION=$(echo $EXTENSION | tr '[:lower:]' '[:upper:]')
-DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$EXTENSION"" ""$BITRATE"" - KBs") #Da utilizzare sed per sostituire le minuscole con le maiuscole
+DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$EXTENSION"" - ""$BITRATE"" KBs") #Da utilizzare sed per sostituire le minuscole con le maiuscole
 echo "$DIR_OUTPUT"
 
 mkdir -p "$DIR_OUTPUT"/ #crea, nel caso la cartella non sia gia' esistente, la directory di destinazione
 mkdir -p "$DIR_OUTPUT_FLAC"
 echo "DIR_OUTPUT" $DIR_OUTPUT >> log_ffpmeg-script.txt #crea un log della cartella appena creata, in caso bisogni eliminarla
 n
+
 #Converter
 for i in "$DIR_INPUT"*.flac; do
     if [ -e "$i" ]; then
