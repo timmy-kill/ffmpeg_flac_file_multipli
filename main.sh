@@ -3,7 +3,7 @@
 echo "Script per l'organizzazzione di file flac"
 echo
 echo "La configurazione attuale è la seguente"
-cat config.txt
+cat config.txt | sed 1d
 echo
 echo
 echo "Modificarla?"
