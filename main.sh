@@ -80,6 +80,7 @@ fi
 DIR_OUTPUT_FLAC=$(echo "$DIR_OUTPUT"/FLAC)
 EXTENSION=$(echo $EXTENSION | tr '[:lower:]' '[:upper:]')
 DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$EXTENSION"" - ""$BITRATE"" KBs") #Da utilizzare sed per sostituire le minuscole con le maiuscole
+EXTENSION=$(echo $EXTENSION | tr '[:upper:]' '[:lower:]')
 echo "$DIR_OUTPUT"
 
 mkdir -p "$DIR_OUTPUT"/ #crea, nel caso la cartella non sia gia' esistente, la directory di destinazione
