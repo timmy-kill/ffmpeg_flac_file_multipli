@@ -79,7 +79,7 @@ if [ $CUE == 1 ]; then  #That condition... wait, I can do it in another way
     cp "$DIR_INPUT_ORIGINAL"/*.cue "$DIR_OUTPUT"/FLAC\ -\ CUE
 fi
 DIR_OUTPUT_FLAC=$(echo "$DIR_OUTPUT"/FLAC) #I really Hate This Variable
-DIR_OUTPUT=$(echo "$DIR_OUTPUT""/"$(echo "$EXTENSION" | tr [:lower:] [:upper:]) " - ""$BITRATE"" KBs") # I need the extension to be uppercase, or I'll freak out
+DIR_OUTPUT=$(echo "$DIR_OUTPUT""/"$(echo "$EXTENSION" | tr [:lower:] [:upper:])" - ""$BITRATE"" KBs") # I need the extension to be uppercase, or I'll freak out
 echo "$DIR_OUTPUT" #Debug
 
 #ACTUAL Folder Creation
