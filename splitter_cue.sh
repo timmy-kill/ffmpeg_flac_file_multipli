@@ -4,6 +4,9 @@
 # optional dependencies:    flac, mac, wavpack, ttaenc
 # v1.3 sen
 
+echo "Thanks to sen for making this script"
+echo "https://bbs.archlinux.org/viewtopic.php?id=75774"
+sleep 1s #He deserve it
 
 SDIR=`pwd`
 

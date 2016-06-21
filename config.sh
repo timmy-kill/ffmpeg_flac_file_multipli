@@ -1,32 +1,32 @@
 #!/bin/bash
 
-#Questa parte di script serve a definire le impostazioni standard per l'utente
+#Script made for storing the users preference
 
 rm -f config.txt
 
 
-#Cartella contenente il binario di ffmpeg
-echo "La directory standard di ffmpeg è ~/bin"
-echo "Se già esiste l'alias ffmpeg, saltare questo passaggio"
-echo "Esiste l'alias?"
+#FFmpeg don't come with an alias, sometimes
+echo "If ffmpeg in your system has an alias, skip this passage"
+echo "Do you wat to use the 'ffmpeg' alias?"
 read YN
 if [ "$YN" == "n" ]; then
+echo "Standard ffmpeg directory is ~/bin"
 DIR_FFMPEG="$HOME""/bin"
-echo "Cambiarla? (y = si, * = no)"
+echo "Change it? (y = si, * = no)"
 read YN
 if [ "$YN" == "y" ]; then
     YN='';
     while [ "$YN" != "y" ]; do
-	echo "Inserire la directory che si vuole utilizzare"
+	echo "Insert chosen directory"
 	read -e DIR_FFMPEG
 	
-	if [ "$DIR_FFMPEG" == "yolo" ]; then #la mia directory di installazione di ffmpeg è diversa, e per moltivi legati al debug voglio semplificare la configurazione della stessa  
+	if [ "$DIR_FFMPEG" == "yolo" ]; then #My ffmpeg folder is different, and I don't want to re-type everytime the folderm while debugging
 	    DIR_FFMPEG="$HOME""/Programmi/Compilati/ffmpeg/bin"
 	fi
 
-	echo "Hai scelto la cartella: $DIR_FFMPEG"
+	echo "You chose the folder: $DIR_FFMPEG"
 	ls "$DIR_FFMPEG"
-	echo "Va bene? (y = si, * = no)"
+	echo "Is it ok? (y = si, * = no)"
 	read YN
 
     done
@@ -35,42 +35,42 @@ fi
 fi
 
 DIR_OUTPUT=""$HOME"/Musica"
-echo "La cartella standard per la musica e' ~/Musica"
-echo "Modificarla? (y = si, * = no)"
+echo "Standard music directory is ~/Musica"
+echo "Modify it? (y = si, * = no)"
 read YN
 
 if [ "$YN" == "y" ]; then
     YN='';
     while [ "$YN" != "y" ]; do
-        echo "Inserire la directory da utilizzare"
+        echo "Insert chosen directory"
         read -e DIR_OUTPUT
-	if [ "$DIR_OUTPUT" == "yolo" ]; then
+	if [ "$DIR_OUTPUT" == "yolo" ]; then #Same as ffmpeg
 	    DIR_OUTPUT="/media/nas"
 	fi
-        echo "Hai scelto la cartella: $DIR_OUTPUT"
+        echo "You choose the directory: $DIR_OUTPUT"
 	ls "$DIR_OUTPUT"
-	echo "Va bene? (y = si, * = no)"
+	echo "Is it ok? (y = si, * = no)"
         read YN
     done
     echo "DIR_OUTPUT" $DIR_OUTPUT >> log.txt
 fi
 
-echo "Selezionare encoder e formato di destinazione"
+echo "Select encoder and destination format"
 echo
-echo "	(a) libopus	(e) libmp3lame	(i) vorbis	" #fornisce una grigllia in output per la scelta del encoder
+echo "	(a) libopus	(e) libmp3lame	(i) vorbis	" #Tab for showing what encoder are possible
 echo "	(b) libvorbis	(f) libfaac	(l) mp2		"
 echo "	(c) libfdk_aac	(g) eac3/ac3	(m) wmav2/wmav1	"
 echo "	(d) aac		(h) libtwolame			"
 echo
 PROFILE=''
 read ENCODER
-case $ENCODER in #la variabile encoder viene riutilizzata per contenere la stringa
+case $ENCODER in #Just reciclyng a variable
 	a) 	ENCODER='libopus';
 		EXTENSION='opus';;
 	b) 	ENCODER='libvorbis';
 		EXTENSION='ogg';;
-	c) 	ENCODER='libfdk_aac'; #libfdk contiene diversi profili
-		echo "Che profilo utilizzare?"
+	c) 	ENCODER='libfdk_aac'; #Damn you, fdk_aac
+		echo "What profile do you want to use?"
 		echo
 		echo "	(*) Standard	(1) aac_he	(2) aac_he_v2	"
 		read PROFILE
@@ -99,9 +99,9 @@ case $ENCODER in #la variabile encoder viene riutilizzata per contenere la strin
 esac
 echo
 echo
-echo "Selezionare Bitrate (scrivere solo il numero)"
+echo "Select bitrate (Write only the number)
 echo
-echo "	16Kb/s	64Kb/s	160Kb/s	" #questo serve solo come guida, quasiasi valore verra' accettato
+echo "	16Kb/s	64Kb/s	160Kb/s	" #You can write every number, but those tabs are cool
 echo "	32Kb/s	96Kb/s	192Kb/s	"
 echo " 	48Kb/s	128Kb/s	320Kb/s	"
 echo
