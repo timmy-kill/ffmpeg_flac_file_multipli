@@ -45,7 +45,7 @@ if [ "$YN" == "y" ]; then
         echo "Insert chosen directory"
         read -e DIR_OUTPUT
 	if [ "$DIR_OUTPUT" == "yolo" ]; then #Same as ffmpeg
-	    DIR_OUTPUT="/media/nas"
+	    DIR_OUTPUT="/media/nas/Musica"
 	fi
         echo "You choose the directory: $DIR_OUTPUT"
 	ls "$DIR_OUTPUT"
@@ -64,7 +64,7 @@ echo "	(d) aac		(h) libtwolame			"
 echo
 PROFILE=''
 read ENCODER
-case $ENCODER in #Just reciclyng a variable
+case "$ENCODER" in #Just reciclyng a variable
 	a) 	ENCODER='libopus';
 		EXTENSION='opus';;
 	b) 	ENCODER='libvorbis';
