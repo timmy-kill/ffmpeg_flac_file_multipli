@@ -99,7 +99,7 @@ case $ENCODER in #Just reciclyng a variable
 esac
 echo
 echo
-echo "Select bitrate (Write only the number)
+echo "Select bitrate (Write only the number)"
 echo
 echo "	16Kb/s	64Kb/s	160Kb/s	" #You can write every number, but those tabs are cool
 echo "	32Kb/s	96Kb/s	192Kb/s	"
