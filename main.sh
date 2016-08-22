@@ -68,8 +68,8 @@ if [ $YN == "n" ]; then #There Might be Errors
 fi
 
 #Kind of useless stuff
-id3 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3 Tagging
-id3 -2 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3v2 Tagging
+# id3 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3 Tagging
+# id3 -2 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3v2 Tagging
 
 #Folder Creation
 DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$ARTISTA""/""$ALBUM")
