@@ -6,7 +6,6 @@ Script, BASH written, to convert and organize all my flac files.
 * FFmpeg - Utilizzato per convertire i files.
 * Cuetools - Necesario allo script "splitter_cue.sh".
 * Shntool - Necessario allo script "splitter_cue.sh".
-* Id3 - Opzionale, tag dell'artista e album nei file.
 
 ##Usage
 * Firsly run config.sh
