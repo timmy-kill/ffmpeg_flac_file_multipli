@@ -22,13 +22,14 @@ EXTENSION=$(echo "$CONFIG_FILE"| grep EXTENSION | sed "s/EXTENSION=//")
 BITRATE=$(echo "$CONFIG_FILE"| grep BITRATE | sed "s/BITRATE=//")
 
 #Input files
-while [ "$YN" != "y" ]; do
+YN="n" #Maybe a do-while would be better
+while [ "$YN" == "n" ]; do
     echo "Where are the music files to be organized?"
     read -e DIR_INPUT
     echo "You choose the folder: ""$DIR_INPUT" #Check
     ls "$DIR_INPUT" #Double check
     DIR_INPUT="$DIR_INPUT""/" 
-    echo "Is it ok? (y = yes, * = no)"
+    echo "Is it ok? (* = yes, y = no)"
     read YN
 done
 
@@ -56,9 +57,9 @@ ARTISTA=$(echo "$ARTISTA" | sed "s/^$PREFISSO//")
 ALBUM=$(grep -m 1 Album metadata.txt)
 PREFISSO="Album                           : " #Same
 ALBUM=$(echo "$ALBUM" | sed "s/^$PREFISSO//")
-ANNO=$(grep -m 1 Date metadata.txt)
+ANNO=$(grep -m 1 "Date                            : " metadata.txt)
 PREFISSO="Date                            : "
-ANNO=$(echo "$ANNO" | sed "s/^$ANNO//")
+ANNO=$(echo "$ANNO" | sed "s/^$PREFISSO//")
 echo "The Artist is" $ARTISTA #Check for errors
 echo "The Album is" $ALBUM
 echo "The Year is" $ANNO
