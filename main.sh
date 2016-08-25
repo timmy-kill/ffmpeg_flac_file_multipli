@@ -56,8 +56,12 @@ ARTISTA=$(echo "$ARTISTA" | sed "s/^$PREFISSO//")
 ALBUM=$(grep -m 1 Album metadata.txt)
 PREFISSO="Album                           : " #Same
 ALBUM=$(echo "$ALBUM" | sed "s/^$PREFISSO//")
+ANNO=$(grep -m 1 Date metadata.txt)
+PREFISSO="Date                            : "
+ANNO=$(echo "$ANNO" | sed "s/^$ANNO//")
 echo "The Artist is" $ARTISTA #Check for errors
 echo "The Album is" $ALBUM
+echo "The Year is" $ANNO
 echo "Correct? (* = yes, n = no)"
 read YN
 if [ $YN == "n" ]; then #There Might be Errors
@@ -65,6 +69,8 @@ if [ $YN == "n" ]; then #There Might be Errors
     read ARTISTA
     echo "What is the Album?"
     read ALBUM
+    echo "What is the Year?"
+    read ANNO
 fi
 
 #Kind of useless stuff
@@ -72,7 +78,7 @@ fi
 # id3 -2 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3v2 Tagging
 
 #Folder Creation
-DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$ARTISTA""/""$ALBUM")
+DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$ARTISTA""/""$ANNO - $ALBUM")
 if [ $CUE == 1 ]; then  #That condition... wait, I can do it in another way
     mkdir -p "$DIR_OUTPUT"/FLAC\ -\ CUE #This should be on the next part
     cp "$DIR_INPUT_ORIGINAL"/*.flac "$DIR_OUTPUT"/FLAC\ -\ CUE
