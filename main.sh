@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Script for organizing Music Files"
+echo "NOW WITH NEW FOLDER MANAGEMENT"
 echo
 echo "Now the configuration file is this one" #The config should remain the same every time 
 cat config.txt | sed 1d
@@ -79,14 +80,16 @@ fi
 # id3 -2 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3v2 Tagging
 
 #Folder Creation
-DIR_OUTPUT=$(echo "$DIR_OUTPUT""/""$ARTISTA""/""$ANNO - $ALBUM")
+DIR_OUTPUT_FLAC="$DIR_OUTPUT"/FLAC/"$ARTISTA"/"$ANNO - $ALBUM"
+DIR_OUTPUT_FLAC_CUE="$DIR_OUTPUT"/"FLAC - CUE"/"$ARTISTA"/"$ANNO - $ALBUM"
+DIR_OUTPUT="$DIR_OUTPUT"/$(echo "$EXTENSION" | tr [:lower:] [:upper:])" - ""$BITRATE"" KBs"/"$ARTISTA"/"$ANNO - $ALBUM"
+
 if [ $CUE == 1 ]; then  #That condition... wait, I can do it in another way
-    mkdir -p "$DIR_OUTPUT"/FLAC\ -\ CUE #This should be on the next part
-    cp "$DIR_INPUT_ORIGINAL"/*.flac "$DIR_OUTPUT"/FLAC\ -\ CUE
-    cp "$DIR_INPUT_ORIGINAL"/*.cue "$DIR_OUTPUT"/FLAC\ -\ CUE
+    mkdir -p "$DIR_OUTPUT_FLAC_CUE" #This should be on the next part
+    cp "$DIR_INPUT_ORIGINAL"/*.flac "$DIR_OUTPUT_FLAC_CUE"
+    cp "$DIR_INPUT_ORIGINAL"/*.cue "$DIR_OUTPUT_FLAC_CUE"
 fi
-DIR_OUTPUT_FLAC=$(echo "$DIR_OUTPUT"/FLAC) #I really Hate This Variable
-DIR_OUTPUT=$(echo "$DIR_OUTPUT""/"$(echo "$EXTENSION" | tr [:lower:] [:upper:])" - ""$BITRATE"" KBs") # I need the extension to be uppercase, or I'll freak out
+
 echo "$DIR_OUTPUT" #Debug
 
 #ACTUAL Folder Creation
