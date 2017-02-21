@@ -2,38 +2,26 @@
 
 #Script made for storing the users preference
 
-rm -f config.txt
+#FFmpeg installation dir
+DIR_FFMPEG=$(find $( echo $PATH | tr -s ":" '\n' ) -name ffmpeg | rev | cut -d/ -f2- | rev )"/"
 
-
-#FFmpeg don't come with an alias, sometimes
-echo "If ffmpeg in your system has an alias, skip this passage"
-echo "Do you wat to use the 'ffmpeg' alias?"
-read YN
-if [ "$YN" == "n" ]; then
-echo "Standard ffmpeg directory is ~/bin"
-DIR_FFMPEG="$HOME""/bin"
-echo "Change it? (y = si, * = no)"
-read YN
-if [ "$YN" == "y" ]; then
-    YN='';
-    while [ "$YN" != "y" ]; do
-	echo "Insert chosen directory"
+if [[ "$DIR_FFMPEG" == "" ]]; then
+    echo "FFmpeg is not in your PATH"
+    YN=n
+    while [[ "$YN" == "n" ]]; do    
+	echo "Where is it?"
 	read -e DIR_FFMPEG
-	
 	if [ "$DIR_FFMPEG" == "yolo" ]; then #My ffmpeg folder is different, and I don't want to re-type everytime the folderm while debugging
 	    DIR_FFMPEG="$HOME""/Programmi/Compilati/ffmpeg/bin"
 	fi
-
-	echo "You chose the folder: $DIR_FFMPEG"
+    	echo "You chose the folder: $DIR_FFMPEG"
 	ls "$DIR_FFMPEG"
-	echo "Is it ok? (y = si, * = no)"
+	echo "Is it ok? (* = si, n = no)"
 	read YN
-
     done
-fi
     DIR_FFMPEG="$DIR_FFMPEG"/
 fi
-
+echo "FFmpeg found in ""$DIR_FFMPEG"
 DIR_OUTPUT=""$HOME"/Musica"
 echo "Standard music directory is ~/Musica"
 echo "Modify it? (y = si, * = no)"
@@ -107,9 +95,33 @@ echo " 	48Kb/s	128Kb/s	320Kb/s	"
 echo
 read BITRATE
 
+DIR_FFPROBE=$(find $( echo $PATH | tr -s ":" '\n' ) -name ffprobe | rev | cut -d/ -f2- | rev )"/"
+DIR_EXIFTOOL=$(find $( echo $PATH | tr -s ":" '\n' ) -name exiftool | rev | cut -d/ -f2- | rev )"/"
+
+if [[ $DIR_EXIFTOOL != "" ]]; then
+    echo "Use exiftool instad of ffprobe for metadata fetching? (more relayable) ( y = yes, n = no )"
+    read $EXIFTOOL
+else
+    if [[ $DIR_FFPROBE == "" ]]; then
+	echo "You need exiftool or ffprobe to use metadata fetching"
+    fi
+fi
+
+TMP=$(find $( echo $PATH | tr -s ":" '\n' ) -name shnsplit)
+if [[ $TMP == "" ]]; then
+    echo "Install shnsplit, if you want to use the splitter_cue.sh script"
+fi
+TMP=$(find $( echo $PATH | tr -s ":" '\n' ) -name cuetag.sh)
+if [[ $TMP == "" ]]; then
+    echo "Install cuetools, if you want to use the splitter_cue.sh script"
+fi
+
+rm -f config.txt
 
 echo "File di configurazione per lo script, modificare i valori o eseguire lo script 'config.sh'" >> config.txt
 echo "FFMPEG =" $DIR_FFMPEG >> config.txt
+echo "FFPROBE =" $DIR_FFPROBE >> config.txt
+echo "EXIFTOOL =" $DIR_EXIFTOOL "("$EXIFTOOL")">> config.txt
 echo "OUTPUT =" $DIR_OUTPUT >> config.txt
 echo "ENCODER =" $ENCODER >> config.txt
 echo "EXTENSION =" $EXTENSION >> config.txt
