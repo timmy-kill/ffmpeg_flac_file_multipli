@@ -1,6 +1,8 @@
 # ffmpeg_musica_file_multipli
 Script, BASH written, to convert and organize all my flac files.
-This version creates a "FORMAT / ARTIST / YEAR - ALBUM " hierarchy
+
+This version creates an "ARTIST / YEAR - ALBUM / FORMAT - BITRATE" hierarchy
+
 You can use ffprobe or exiftool for metadata fetching
 
 ## Dependency
