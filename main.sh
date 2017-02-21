@@ -16,11 +16,14 @@ fi
 
 #Load config file
 CONFIG_FILE=$(cat config.txt | tr -d [:blank:])
-FFMPEG=$(echo "$CONFIG_FILE"| grep FFMPEG | sed "s/FFMPEG=//")
-DIR_OUTPUT=$(echo "$CONFIG_FILE"| grep OUTPUT | sed "s/OUTPUT=//")
-ENCODER=$(echo "$CONFIG_FILE"| grep ENCODER | sed "s/ENCODER=//")
-EXTENSION=$(echo "$CONFIG_FILE"| grep EXTENSION | sed "s/EXTENSION=//")
-BITRATE=$(echo "$CONFIG_FILE"| grep BITRATE | sed "s/BITRATE=//")
+DIR_FFMPEG=$(echo "$CONFIG_FILE"| grep FFMPEG | cut -d= -f2-)
+DIR_FFPROBE=$(echo "$CONFIG_FILE"| grep FFPROBE | cut -d= -f2-)
+DIR_EXIFTOOL=$(echo "$CONFIG_FILE"| grep EXIFTOOL | cut -d= -f2- | sed s/"(".*.")"// )
+EXIFTOOL=$(echo "$CONFIG_FILE"| grep EXIFTOOL | cut -d"(" -f2- | sed 's/.$//' )
+DIR_OUTPUT=$(echo "$CONFIG_FILE"| grep OUTPUT | cut -d= -f2-)
+ENCODER=$(echo "$CONFIG_FILE"| grep ENCODER | cut -d= -f2-)
+EXTENSION=$(echo "$CONFIG_FILE"| grep EXTENSION | cut -d= -f2-)
+BITRATE=$(echo "$CONFIG_FILE"| grep BITRATE | cut -d= -f2-)
 
 #Input files
 YN="n" #Maybe a do-while would be better
@@ -51,16 +54,22 @@ fi
 
 #Load Metadata
 rm metadata.txt
-exiftool "$DIR_INPUT"*.flac >> metadata.txt
-ARTISTA=$(grep -m 1 Artist metadata.txt)
-PREFISSO="Artist                          : " #This variable make the whole thing cleaner, I guess
-ARTISTA=$(echo "$ARTISTA" | sed "s/^$PREFISSO//")
-ALBUM=$(grep -m 1 Album metadata.txt)
-PREFISSO="Album                           : " #Same
-ALBUM=$(echo "$ALBUM" | sed "s/^$PREFISSO//")
-ANNO=$(grep -m 1 "Date                            : " metadata.txt)
-PREFISSO="Date                            : "
-ANNO=$(echo "$ANNO" | sed "s/^$PREFISSO//")
+
+#if [[ $EXIFTOOL == "y" ]]; then
+if true; then
+    "$DIR_EXIFTOOL"exiftool "$DIR_INPUT"*.flac | \
+	grep -v Directory | grep -v "File Name" | grep -v "======="  | grep -v "Date/Time" >> metadata.txt
+    ARTISTA=$(grep -m 1 Artist metadata.txt | cut -d: -f 2 | cut -c 2-)
+    ALBUM=$(grep -m 1 Album metadata.txt | cut -d: -f 2 | cut -c 2-)
+    ANNO=$(grep -m 1 Date metadata.txt | cut -d: -f 2 | cut -c 2-)
+else
+    FIRST_FILE=("$DIR_INPUT"*.flac)
+    "$DIR_FFPROBE"ffprobe "$FIRST_FILE" 2>> metadata.txt
+    ARTISTA=$(grep -m 1  ARTIST metadata.txt | cut -d: -f 2 | cut -c 2-)
+    ALBUM=$(grep -m 1   ALBUM metadata.txt | cut -d: -f 2 | cut -c 2-)
+    ANNO=$(grep -m 1  DATE metadata.txt | cut -d: -f 2 | cut -c 2-)
+    
+fi
 echo "The Artist is" $ARTISTA #Check for errors
 echo "The Album is" $ALBUM
 echo "The Year is" $ANNO
@@ -74,10 +83,6 @@ if [ $YN == "n" ]; then #There Might be Errors
     echo "What is the Year?"
     read ANNO
 fi
-
-#Kind of useless stuff
-# id3 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3 Tagging
-# id3 -2 -a "$ARTISTA" -l "$ALBUM" "$DIR_INPUT"*.flac #Id3v2 Tagging
 
 #Folder Creation
 DIR_OUTPUT_FLAC="$DIR_OUTPUT"/FLAC/"$ARTISTA"/"$ANNO - $ALBUM"
@@ -100,10 +105,16 @@ echo "DIR_OUTPUT" $DIR_OUTPUT >> log.txt #Logs are always useful
 #Converter
 echo "Thanks to rubylaser for making the scheletron of this"
 echo "http://ubuntuforums.org/showthread.php?t=1705974"
+
 for i in "$DIR_INPUT"*.flac; do
     if [ -e "$i" ]; then
+	TRACK=$(( $TRACK + 1 ))
 	file=$(basename -s .flac "$i") #.flac.opus isn't cool
-  	"$DIR_FFMPEG"ffmpeg -i  "$i" -c:a "$ENCODER" -b:a "$BITRATE"k  "$DIR_OUTPUT"/"$file"."$EXTENSION"
+   	"$DIR_FFMPEG"ffmpeg -i  "$i" \
+		     -c:a "$ENCODER" -b:a "$BITRATE"k  \
+		     -metadata author="$ARTISTA" -metadata album="$ALBUM" -metadata year="$ANNO" -metadata track="$TRACK" \
+		     "$DIR_OUTPUT"/"$file"."$EXTENSION"
+	
 	cp "$i" "$DIR_OUTPUT_FLAC" #Don't fotget the actual flac file
     fi
 done
@@ -113,4 +124,4 @@ done
 echo
 echo
 echo "You'll need to copy folder and .accurip files by your own"
-echo "Sorry :D"
+echo "Sorry :D:"
