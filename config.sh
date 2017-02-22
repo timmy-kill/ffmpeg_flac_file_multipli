@@ -5,7 +5,7 @@
 #FFmpeg installation dir
 DIR_FFMPEG=$(find $( echo $PATH | tr -s ":" '\n' ) -name ffmpeg | rev | cut -d/ -f2- | rev )"/"
 
-if [[ "$DIR_FFMPEG" == "" ]]; then
+if [[ "$DIR_FFMPEG" == "/" ]]; then
     echo "FFmpeg is not in your PATH"
     YN=n
     while [[ "$YN" == "n" ]]; do    
@@ -20,8 +20,9 @@ if [[ "$DIR_FFMPEG" == "" ]]; then
 	read YN
     done
     DIR_FFMPEG="$DIR_FFMPEG"/
+   else
+    echo "FFmpeg found in ""$DIR_FFMPEG"
 fi
-echo "FFmpeg found in ""$DIR_FFMPEG"
 DIR_OUTPUT=""$HOME"/Musica"
 echo "Standard music directory is ~/Musica"
 echo "Modify it? (y = si, * = no)"
@@ -98,11 +99,12 @@ read BITRATE
 DIR_FFPROBE=$(find $( echo $PATH | tr -s ":" '\n' ) -name ffprobe | rev | cut -d/ -f2- | rev )"/"
 DIR_EXIFTOOL=$(find $( echo $PATH | tr -s ":" '\n' ) -name exiftool | rev | cut -d/ -f2- | rev )"/"
 
-if [[ $DIR_EXIFTOOL != "" ]]; then
+
+if [[ $DIR_EXIFTOOL != "/" ]]; then
     echo "Use exiftool instad of ffprobe for metadata fetching? (more relayable) ( y = yes, n = no )"
     read $EXIFTOOL
 else
-    if [[ $DIR_FFPROBE == "" ]]; then
+    if [[ $DIR_FFPROBE == "/" ]]; then
 	echo "You need exiftool or ffprobe to use metadata fetching"
     fi
 fi

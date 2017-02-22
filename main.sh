@@ -55,8 +55,8 @@ fi
 #Load Metadata
 rm metadata.txt
 
-#if [[ $EXIFTOOL == "y" ]]; then
-if true; then
+if [[ $EXIFTOOL == "y" ]]; then
+#if true; then
     "$DIR_EXIFTOOL"exiftool "$DIR_INPUT"*.flac | \
 	grep -v Directory | grep -v "File Name" | grep -v "======="  | grep -v "Date/Time" >> metadata.txt
     ARTISTA=$(grep -m 1 Artist metadata.txt | cut -d: -f 2 | cut -c 2-)
