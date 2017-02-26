@@ -68,7 +68,6 @@ else
     ARTISTA=$(grep -m 1  ARTIST metadata.txt | cut -d: -f 2 | cut -c 2-)
     ALBUM=$(grep -m 1   ALBUM metadata.txt | cut -d: -f 2 | cut -c 2-)
     ANNO=$(grep -m 1  DATE metadata.txt | cut -d: -f 2 | cut -c 2-)
-    
 fi
 echo "The Artist is" $ARTISTA #Check for errors
 echo "The Album is" $ALBUM
