@@ -41,7 +41,7 @@ for ARTISTA in *; do					#1 livello
 		TRACK_META=$(echo "$FFPROBE" | grep -m 1  track | cut -d: -f 2 | cut -c 2-)		  
 
 		    SONG=$( basename -s .flac "$SONG" )
-			ffmpeg -y -i "$SONG".flac \
+			ffmpeg -n -i "$SONG".flac \
 				     -write_id3v2 1 -metadata author="$ARTISTA_META" -metadata album="$ALBUM_META" -metadata year="$ANNO_META" -metadata track="$TRACK_META" \
 				     "$MUSIC_DIR"/"$FORMAT"/"$ARTISTA"/"$ALBUM"/"$SONG".$(echo "$FORMAT" | tr [:upper:] [:lower:])
 
