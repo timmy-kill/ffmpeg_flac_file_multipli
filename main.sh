@@ -96,10 +96,25 @@ fi
 
 echo "$DIR_OUTPUT" #Debug
 
+
 #ACTUAL Folder Creation
 mkdir -p "$DIR_OUTPUT"/
 mkdir -p "$DIR_OUTPUT_FLAC"
 echo "DIR_OUTPUT" $DIR_OUTPUT >> log.txt #Logs are always useful
+
+
+#Cover copier
+for i in "$DIR_INPUT"*.png; do
+	img2txt --width=$(tput cols) "$i"
+	echo "could this be the cover?"
+	read YN
+	if [ "$YN" == "y" ]; then
+		FILE=$(basename "$i")
+		cp "$i" "$DIR_OUTPUT"/"cover".$(echo "$FILE" | cut -d. -f2-)
+		cp "$i" "$DIR_OUTPUT_FLAC"/"cover".$(echo "$FILE" | cut -d. -f2-)
+	fi
+done
+
 
 #Converter
 echo "Thanks to rubylaser for making the scheletron of this"
@@ -118,15 +133,10 @@ for i in "$DIR_INPUT"*.flac; do
     fi
 done
 
-#Cover Copier
-if COVER in "$DIR_INPUT"cover.png || "$DIR_INPUT"cover.jpg; do
-    cp "$COVER" "$DIR_OUTPUT_FLAC"
-    cp "$COVER" "$DIR_OUTPUT"
-fi
 
-    
 #To be done
 echo
 echo
 echo "You'll need to copy folder and .accurip files by your own"
-echo "Sorry :D:"
+echo "Sorry :D"
+0
