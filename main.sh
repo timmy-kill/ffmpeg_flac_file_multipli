@@ -119,6 +119,12 @@ for i in "$DIR_INPUT"*.flac; do
 done
 
 #Cover Copier
+if COVER in "$DIR_INPUT"cover.png || "$DIR_INPUT"cover.jpg; do
+    cp "$COVER" "$DIR_OUTPUT_FLAC"
+    cp "$COVER" "$DIR_OUTPUT"
+fi
+
+    
 #To be done
 echo
 echo
