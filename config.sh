@@ -11,7 +11,7 @@ if [[ "$DIR_FFMPEG" == "/" ]]; then
     while [[ "$YN" == "n" ]]; do    
 	echo "Where is it?"
 	read -e DIR_FFMPEG
-	if [ "$DIR_FFMPEG" == "yolo" ]; then #My ffmpeg folder is different, and I don't want to re-type everytime the folderm while debugging
+	if [[ "$DIR_FFMPEG" == "yolo" ]]; then #My ffmpeg folder is different, and I don't want to re-type everytime the folderm while debugging
 	    DIR_FFMPEG="$HOME""/Programmi/Compilati/ffmpeg/bin"
 	fi
     	echo "You chose the folder: $DIR_FFMPEG"
@@ -28,12 +28,12 @@ echo "Standard music directory is ~/Musica"
 echo "Modify it? (y = si, * = no)"
 read YN
 
-if [ "$YN" == "y" ]; then
+if [[ "$YN" == "y" ]]; then
     YN='';
-    while [ "$YN" != "y" ]; do
+    while [[ "$YN" != "y" ]]; do
         echo "Insert chosen directory"
         read -e DIR_OUTPUT
-	if [ "$DIR_OUTPUT" == "yolo" ]; then #Same as ffmpeg
+	if [[ "$DIR_OUTPUT" == "yolo" ]]; then #Same as ffmpeg
 	    DIR_OUTPUT="/media/nas/Musica"
 	fi
         echo "You choose the directory: $DIR_OUTPUT"
