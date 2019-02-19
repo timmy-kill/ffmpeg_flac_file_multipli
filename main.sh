@@ -7,7 +7,7 @@ if [ ! -d "$1" ]; then
     >&2 printf "Usage: ./main.sh [FLAC DIRECTORY]\n"
     return 1
 else
-    DIR_INPUT="$1"
+    DIR_INPUT="$1/"
 fi
 printf "Current configuration file:\n%s \nModify it? (y=yes, *=no)" "$(sed 1d < config.txt)" #The config should remain the same every time
 read YN
@@ -92,40 +92,47 @@ if [ $CUE -eq 1 ]; then
     cp "$DIR_INPUT_ORIGINAL"/*.cue "$DIR_OUTPUT_FLAC_CUE"
 fi
 
-printf "%s" "$DIR_OUTPUT" #Debug
+printf "%s\n" "$DIR_OUTPUT" #Debug
 
 
 #ACTUAL Folder Creation
 mkdir -p "$DIR_OUTPUT"/
 mkdir -p "$DIR_OUTPUT_FLAC"
-printf "DIR_OUTPUT %s" "$DIR_OUTPUT" >> log.txt #Logs are always useful
+printf "DIR_OUTPUT %s\n" "$DIR_OUTPUT" >> log.txt #Logs are always useful
 
 
 #Cover copier
-for i in $(find *png *jpg); do
-	img2txt --width=$(tput cols) "$i"
-	printf "could this be the cover?"
-	read YN
-	if [ "$YN" = "y" ]; then
-		FILE=$(basename "$i")
-		cp "$i" "$DIR_OUTPUT"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
-		cp "$i" "$DIR_OUTPUT_FLAC"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
-	fi
-done
+#find "$DIR_INPUT" -name "*.png" -or -name "*.jpg" | while read i; do
+#	img2txt --width=$(tput cols) "$i"
+#	printf "could this be the cover?"
+#	read YN
+#	if [ "$YN" = "y" ]; then
+#		FILE=$(basename "$i")
+#		cp "$i" "$DIR_OUTPUT"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
+#		cp "$i" "$DIR_OUTPUT_FLAC"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
+#	fi
+#done
 
 
 #Converter
 printf "Thanks to rubylaser for making the scheletron of this \nhttp://ubuntuforums.org/showthread.php?t=1705974"
 
-for i in "$DIR_INPUT"*.flac; do
-    if [ -e "$i" ]; then
-	TRACK=$(( $TRACK + 1 ))
-	file=$(basename -s .flac "$i") #.flac.opus isn't cool
-   	"$DIR_FFMPEG"ffmpeg -i  "$i" \
-		     -c:a "$ENCODER" -b:a "$BITRATE"k  \
-		     -metadata author="$ARTISTA" -metadata album="$ALBUM" -metadata year="$ANNO" -metadata track="$TRACK" \
-		     "$DIR_OUTPUT"/"$file"."$EXTENSION"
-	
-	cp "$i" "$DIR_OUTPUT_FLAC" #Don't fotget the actual flac file
-    fi
+LSSLESS_IN=$(find "$DIR_INPUT" -name "*.flac" -or -name "*.m4a" -or -name "*.caf" | head -n1 | rev | cut -d'.' -f1 | rev)
+
+echo "$LSSLESS_IN"
+
+for i in "$DIR_INPUT"*."$LSSLESS_IN"; do
+    if [ -e "$i" ]; then #Dont know why I put this here, but too afraid to remove it
+		TRACK=$(( $TRACK + 1 ))
+		file=$(basename -s ."$LSSLESS_IN" "$i") #.flac.opus isn't cool
+		"$DIR_FFMPEG"ffmpeg -i  "$i" \
+			     -c:a "$ENCODER" -b:a "$BITRATE"k  \
+			     -metadata author="$ARTISTA" -metadata album="$ALBUM" -metadata year="$ANNO" -metadata track="$TRACK" \
+			     "$DIR_OUTPUT"/"$file"."$EXTENSION"
+		if [ "$LSSLESS_IN" == "flac" ]; then
+			cp "$i" "$DIR_OUTPUT_FLAC" #Don't fotget the actual flac file
+		else
+			"$DIR_FFMPEG"ffmpeg -i "$i" "$DIR_OUTPUT_FLAC"/"$file".flac
+		fi
+	fi
 done
