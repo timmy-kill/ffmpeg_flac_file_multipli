@@ -66,7 +66,7 @@ if [ "$EXIFTOOL" = "y" ]; then
 else
     FIRST_FILE="$DIR_INPUT"$(ls "$DIR_INPUT" | head -1)
     "$DIR_FFPROBE"ffprobe "$FIRST_FILE" 2>> metadata.txt
-    ARTISTA=$(grep -m 4 ARTIST metadata.txt | cut -d: -f 2 | cut -c 2-)
+    ARTISTA=$(grep -m 1 ARTIST metadata.txt | cut -d: -f 2 | cut -c 2-)
     ALBUM=$(grep -m 1 ALBUM metadata.txt | cut -d: -f 2 | cut -c 2-)
     ANNO=$(grep -m 1 DATE metadata.txt | cut -d: -f 2 | cut -c 2-)
 fi
@@ -102,27 +102,44 @@ printf "DIR_OUTPUT %s\n" "$DIR_OUTPUT" >> log.txt #Logs are always useful
 
 
 #Cover copier
-#find "$DIR_INPUT" -name "*.png" -or -name "*.jpg" | while read i; do
-#	img2txt --width=$(tput cols) "$i"
-#	printf "could this be the cover?"
-#	read YN
-#	if [ "$YN" = "y" ]; then
-#		FILE=$(basename "$i")
-#		cp "$i" "$DIR_OUTPUT"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
-#		cp "$i" "$DIR_OUTPUT_FLAC"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
-#	fi
-#done
+
+cover(){
+printf "%s could this be the cover? (s: show)\n" "$1"
+	read YN
+	if [ "$YN" = "s" ]; then
+		img2txt --width=$(tput cols) "$1"
+		printf "so?\n"
+		read YN
+	fi
+	if [ "$YN" = "y" ]; then
+		FILE=$(basename "$1")
+		cp "$1" "$DIR_OUTPUT"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
+		cp "$1" "$DIR_OUTPUT_FLAC"/"cover".$(printf "%s" "$FILE" | cut -d. -f2-)
+	fi
+}
+
+for i in "$DIR_INPUT"*.jpg; do
+		cover "$i"
+done
+
+for i in "$DIR_INPUT"*.jpeg; do
+		cover "$i"
+done
+
+for i in "$DIR_INPUT"*.png; do
+		cover "$i"
+done
 
 
 #Converter
-printf "Thanks to rubylaser for making the scheletron of this \nhttp://ubuntuforums.org/showthread.php?t=1705974"
+printf "Thanks to rubylaser for making the scheletron of this \nhttp://ubuntuforums.org/showthread.php?t=1705974\n"
 
 LSSLESS_IN=$(find "$DIR_INPUT" -name "*.flac" -or -name "*.m4a" -or -name "*.caf" | head -n1 | rev | cut -d'.' -f1 | rev)
 
-echo "$LSSLESS_IN"
+LSSLESS_IN="flac"
 
 for i in "$DIR_INPUT"*."$LSSLESS_IN"; do
-    if [ -e "$i" ]; then #Dont know why I put this here, but too afraid to remove it
+    if [ -e "$i" ]; then 
 		TRACK=$(( $TRACK + 1 ))
 		file=$(basename -s ."$LSSLESS_IN" "$i") #.flac.opus isn't cool
 		"$DIR_FFMPEG"ffmpeg -i  "$i" \
