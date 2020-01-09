@@ -4,16 +4,15 @@ Script, BASH written, to convert and organize all my flac files.
 This version creates an "FORMAT - BITRATE / ARTIST / YEAR - ALBUM" 
 hierarchy
 
-You can use ffprobe or exiftool for metadata fetching
+You can use ffprobe for metadata fetching
 
 ## Dependency
 * FFmpeg - Used for converting files
-* Exiftool - *Optional* Metadata fetching
-* FFprobe - *Optional* Metadata fetching
-* Cuetools - Necesario allo script "splitter_cue.sh".
-* Shntool - Necessario allo script "splitter_cue.sh".
+* FFprobe - Metadata fetching
+* Cuetools - Cue splitting (The rest will work anyway)
+* Shntool - Cue splitting (The rest will work anyway)
 
-##Usage
-* Firsly run config.sh
-* Then main.sh
+## Usage
+* Run config.sh
+* Then fffm.sh
 * Enjoy

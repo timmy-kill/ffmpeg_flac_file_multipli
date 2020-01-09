@@ -2,6 +2,8 @@
 
 #Script made for storing the users preference
 
+CONF_FILE='fffm.conf'
+
 #FFmpeg installation dir
 DIR_FFMPEG=$(find $( echo $PATH | tr -s ":" '\n' ) -name ffmpeg | rev | cut -d/ -f2- | rev )"/"
 
@@ -97,16 +99,10 @@ echo
 read BITRATE
 
 DIR_FFPROBE=$(find $( echo $PATH | tr -s ":" '\n' ) -name ffprobe | rev | cut -d/ -f2- | rev )"/"
-DIR_EXIFTOOL=$(find $( echo $PATH | tr -s ":" '\n' ) -name exiftool | rev | cut -d/ -f2- | rev )"/"
 
 
-if [[ $DIR_EXIFTOOL != "/" ]]; then
-    echo "Use exiftool instad of ffprobe for metadata fetching? (more relayable) ( y = yes, n = no )"
-    read $EXIFTOOL
-else
-    if [[ $DIR_FFPROBE == "/" ]]; then
-	echo "You need exiftool or ffprobe to use metadata fetching"
-    fi
+if [[ $DIR_FFPROBE == "/" ]]; then
+	echo "You ffprobe to use metadata fetching"
 fi
 
 TMP=$(find $( echo $PATH | tr -s ":" '\n' ) -name shnsplit)
@@ -118,14 +114,13 @@ if [[ $TMP == "" ]]; then
     echo "Install cuetools, if you want to use the splitter_cue.sh script"
 fi
 
-rm -f config.txt
+rm -f $CONF_FILE
 
-echo "File di configurazione per lo script, modificare i valori o eseguire lo script 'config.sh'" >> config.txt
-echo "FFMPEG =" $DIR_FFMPEG >> config.txt
-echo "FFPROBE =" $DIR_FFPROBE >> config.txt
-echo "EXIFTOOL =" $DIR_EXIFTOOL "("$EXIFTOOL")">> config.txt
-echo "OUTPUT =" $DIR_OUTPUT >> config.txt
-echo "ENCODER =" $ENCODER >> config.txt
-echo "EXTENSION =" $EXTENSION >> config.txt
-echo "PROFILE =" $PROFILE >> config.txt
-echo "BITRATE =" $BITRATE >> config.txt
+echo '#File di configurazione per lo script, modificare i valori o eseguire lo script config.sh' >> $CONF_FILE
+echo FFMPEG=$DIR_FFMPEG >> $CONF_FILE
+echo FFPROBE=$DIR_FFPROBE >> $CONF_FILE
+echo DIR_OUTPUT=$DIR_OUTPUT >> $CONF_FILE
+echo ENCODER=$ENCODER >> $CONF_FILE
+echo EXTENSION=$EXTENSION >> $CONF_FILE
+echo PROFILE=$PROFILE >> $CONF_FILE
+echo BITRATE=$BITRATE >> $CONF_FILE
