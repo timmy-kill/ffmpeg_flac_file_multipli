@@ -12,7 +12,7 @@ You can use ffprobe for metadata fetching
 * Cuetools - Cue splitting (The rest will work anyway)
 * Shntool - Cue splitting (The rest will work anyway)
 
-## Usage
+##Usage
 * Run config.sh
 * Then fffm.sh
 * Enjoy

@@ -2,6 +2,9 @@
 
 LOG_FILE='fffm.log'
 CONF_FILE='fffm.conf'
+METADATA_FILE='/tmp/fffm.metadata'
+
+set -e
 
 # Splitter
 splitter_cue ()
@@ -141,13 +144,13 @@ if find "$DIR_INPUT"*.cue 1>/dev/null; then
 fi
 
 #Load Metadata
-rm metadata.txt
+rm "$METDATA_FILE"
 
 FIRST_FILE="$DIR_INPUT"$(ls "$DIR_INPUT" | head -1)
-"$DIR_FFPROBE"ffprobe "$FIRST_FILE" 2>> metadata.txt
-ARTISTA=$(grep -m 1 ARTIST metadata.txt | cut -d: -f 2 | cut -c 2-)
-ALBUM=$(grep -m 1 ALBUM metadata.txt | cut -d: -f 2 | cut -c 2-)
-ANNO=$(grep -m 1 DATE metadata.txt | cut -d: -f 2 | cut -c 2-)
+"$DIR_FFPROBE"ffprobe "$FIRST_FILE" 2>> "$METDATA_FILE"
+ARTISTA=$(grep -m 1 ARTIST "$METDATA_FILE" | cut -d: -f 2 | cut -c 2-)
+ALBUM=$(grep -m 1 ALBUM "$METDATA_FILE" | cut -d: -f 2 | cut -c 2-)
+ANNO=$(grep -m 1 DATE "$METDATA_FILE" | cut -d: -f 2 | cut -c 2-)
 
 
 printf "The Artist is: %s \nThe Album is: %s \nThe Year is: %s \nCorrect? (* = yes, n = no)\n" "$ARTISTA" "$ALBUM" "$ANNO" #Error checking
