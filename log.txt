@@ -1,0 +1,2 @@
+DIR_OUTPUT /media/musica/
+DIR_OUTPUT /media/musica/
